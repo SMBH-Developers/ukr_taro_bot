@@ -3,6 +3,7 @@ from ..constants import BASE_DIR
 
 
 class _Settings(BaseSettings):
+    uniq_title: str
     tg_token: str
     sqlalchemy_url: str
     redis_db: int
