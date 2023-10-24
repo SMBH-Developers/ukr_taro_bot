@@ -10,7 +10,7 @@ from ..models import User
 async def get_users_stat() -> tuple[int, int, int]:
 
     def _users_count():
-        return select(func.count()).select_from(User)
+        return select(func.count(User.id)).select_from(User)
 
     async with async_session() as session:
         all_users = (await session.execute(_users_count())).scalar_one()
@@ -44,7 +44,7 @@ def _optimize_stages(ls_stages_stat):
     for default_stage in stages:
         if default_stage not in db_stages:
             ls_stages_stat.append((default_stage, 0))
-    ls_stages_stat.sort(key=lambda ls: ls if ls[0] is not None else '.')
+    ls_stages_stat.sort(key=lambda ls: ls[0] if ls[0] is not None else '.')
     return ls_stages_stat
 
 
