@@ -165,6 +165,7 @@ cython_debug/
 
 # handlers for every bot are special
 src/handlers/*
+!src/handlers/_utils/
 !src/handlers/__init__.py
 
 # logs
