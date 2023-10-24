@@ -21,7 +21,8 @@ async def update_stage(id_: int, new_stage: str):
 
 
 async def delete_user(id_: int):
-    query = delete(User).where(User.id == id_)
+    query = update(User).where(User.id == id_).values(status='deleted')
+
     async with async_session() as session:
         await session.execute(query)
         await session.commit()

@@ -23,3 +23,5 @@ class User(Base):
 
     got_2h_autosending: Mapped[datetime | None] = mapped_column(TIMESTAMP)
     got_24h_autosending: Mapped[datetime | None] = mapped_column(TIMESTAMP)
+
+    status = mapped_column(String(64), default='alive')
