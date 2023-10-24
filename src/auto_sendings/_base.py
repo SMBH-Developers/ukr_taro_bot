@@ -18,7 +18,9 @@ class BaseSending:
     kb: types.InlineKeyboardMarkup = None
     requirements: tuple[ColumnElement] = None
     to_log: str = None
-    update_on_success: Update = None
+
+    def _update_query_on_success(self, user: int) -> Update:
+        raise NotImplementedError
 
     async def _try_to_send(self, user: int) -> bool:
         """Returns True on success sending, other way False"""
@@ -48,6 +50,6 @@ class BaseSending:
                 if await self._try_to_send(user):
                     logger.success(f'{self.to_log} {user=}')
                     async with async_session() as session:
-                        await session.execute(self.update_on_success)
+                        await session.execute(self._update_query_on_success(user))
                         await session.commit()
             await asyncio.sleep(5)

@@ -1,6 +1,7 @@
 from aiogram import types
 from aiogram.utils import markdown
 
+from sqlalchemy import Update
 from sqlalchemy import func
 from sqlalchemy.sql.expression import select, update
 
@@ -20,7 +21,9 @@ class Sending2Hours(BaseSending):
     kb = None
     requirements = None
     to_log = None
-    update_on_success = None
+
+    def _update_query_on_success(self, user: int) -> Update:
+        return super()._update_query_on_success(user)
 
     async def start(self):
         try:
@@ -36,7 +39,9 @@ class Sending24Hours(BaseSending):
     kb = None
     requirements = None
     to_log = None
-    update_on_success = None
+
+    def _update_query_on_success(self, user: int) -> Update:
+        return super()._update_query_on_success(user)
 
     async def start(self):
         try:
