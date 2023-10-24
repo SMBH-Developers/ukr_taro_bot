@@ -28,7 +28,7 @@ async def amqp_queue_task() -> None:
 
     connection = await aio_pika.connect(url)
 
-    queue_name = f"update_stage_$_{settings.uniq_title}"
+    queue_name = f"update_stage__{settings.uniq_title}"
     channel = await connection.channel()
     await channel.set_qos(prefetch_count=25)
     queue = await channel.declare_queue(queue_name, durable=True)
