@@ -1,18 +1,24 @@
 import asyncio
 
 from aiogram import types, exceptions
+
+from sqlalchemy import select
+from sqlalchemy import ColumnElement, Update
+
 from loguru import logger
 
-from abc import ABC, abstractmethod
-
 from ..common import bot
-from ..models import db
+from ..models import db, async_session, User
 
 
-class BaseSending(ABC):
+class BaseSending:
 
+    is_active: bool = False
     text: str = None
     kb: types.InlineKeyboardMarkup = None
+    requirements: tuple[ColumnElement] = None
+    to_log: str = None
+    update_on_success: Update = None
 
     async def _try_to_send(self, user: int) -> bool:
         """Returns True on success sending, other way False"""
@@ -29,9 +35,19 @@ class BaseSending(ABC):
         return False
 
     def _verify(self):
-        if self.text is None or self.kb is None:
+        if self.text is None or self.kb is None or self.requirements is None or self.to_log is None or self.update_on_success is None:
             raise ValueError("Sending hasn't text or kb")
 
-    @abstractmethod
     async def start(self):
-        raise NotImplementedError
+        self._verify()
+        while True:
+            async with async_session() as session:
+                users = (await session.execute(select(User.id).where(*self.requirements))).scalars().all()
+
+            for user in users:
+                if await self._try_to_send(user):
+                    logger.success(f'{self.to_log} {user=}')
+                    async with async_session() as session:
+                        await session.execute(self.update_on_success)
+                        await session.commit()
+            await asyncio.sleep(5)
