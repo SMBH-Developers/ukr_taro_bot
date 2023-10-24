@@ -25,7 +25,7 @@ class Sending2Hours(BaseSending):
 
     def requirements(self):
         return ((User.registration_date + timedelta(hours=2)) < datetime.now(),
-                User.got_2h_autosending.is_(None), User.stage != 'stage_4')
+                User.got_2h_autosending.is_(None), User.stage != 'stage_4', User.status == 'alive')
 
     def _update_query_on_success(self, user: int) -> Update:
         return update(User).where(User.id == user).values(got_2h_autosending=func.now())
@@ -47,7 +47,7 @@ class Sending24Hours(BaseSending):
 
     def requirements(self):
         return ((User.got_2h_autosending + timedelta(hours=22)) < datetime.now(),
-                User.got_24h_autosending.is_(None), User.stage != 'stage_4')
+                User.got_24h_autosending.is_(None), User.stage != 'stage_4', User.status == 'alive')
 
     def _update_query_on_success(self, user: int) -> Update:
         return update(User).where(User.id == user).values(got_24h_autosending=func.now())
