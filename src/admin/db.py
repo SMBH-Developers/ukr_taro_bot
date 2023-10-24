@@ -15,10 +15,10 @@ async def get_users_stat() -> tuple[int, int, int]:
     async with async_session() as session:
         all_users = (await session.execute(_users_count())).scalar_one()
         yesterday_users = (await session.execute(_users_count()
-                                                 .where(User.registration_date == (date.today() - timedelta(days=1)))
+                                                 .where(func.date(User.registration_date) == (date.today() - timedelta(days=1)))
                                                  )).scalar_one()
         today_users = (await session.execute(_users_count()
-                                             .where(User.registration_date == date.today())
+                                             .where(func.date(User.registration_date) == date.today())
                                              )).scalar_one()
 
     return all_users, yesterday_users, today_users
@@ -56,10 +56,10 @@ async def get_stages_stat() -> list[list[tuple], list[tuple], list[tuple]]:
     async with async_session() as session:
         total_stages = (await session.execute(_stages_count())).all()
         yesterday_stages = (await session.execute(_stages_count()
-                                                  .where(User.registration_date == (date.today() - timedelta(days=1)))
+                                                  .where(func.date(User.registration_date) == (date.today() - timedelta(days=1)))
                                                   )).all()
         today_stages = (await session.execute(_stages_count()
-                                              .where(User.registration_date == date.today())
+                                              .where(func.date(User.registration_date) == date.today())
                                               )).all()
     ls = [_optimize_stages(stages_stat) for stages_stat in (total_stages, yesterday_stages, today_stages)]
     return ls
