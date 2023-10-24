@@ -37,7 +37,7 @@ class BaseSending:
         return False
 
     def _verify(self):
-        if self.text is None or self.kb is None or self.requirements is None or self.to_log is None or self.update_on_success is None:
+        if self.text is None or self.kb is None or self.requirements is None or self.to_log is None:
             raise ValueError("Sending hasn't text or kb")
 
     async def start(self):
