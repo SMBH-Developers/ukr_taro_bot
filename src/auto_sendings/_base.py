@@ -14,7 +14,7 @@ class BaseSending(ABC):
     text: str = None
     kb: types.InlineKeyboardMarkup = None
 
-    def _try_to_send(self, user: int) -> bool:
+    async def _try_to_send(self, user: int) -> bool:
         """Returns True on success sending, other way False"""
         try:
             await bot.send_message(user, text=self.text, reply_markup=self.kb, parse_mode='html')
@@ -33,5 +33,5 @@ class BaseSending(ABC):
             raise ValueError("Sending hasn't text or kb")
 
     @abstractmethod
-    def start(self):
+    async def start(self):
         raise NotImplementedError

@@ -9,7 +9,7 @@ class Sending2Hours(BaseSending):
     text = None
     kb = None
 
-    def start(self):
+    async def start(self):
         return
         self._verify()
 
@@ -18,6 +18,6 @@ class Sending24Hours(BaseSending):
     text = None
     kb = None
 
-    def start(self):
+    async def start(self):
         return
         self._verify()
