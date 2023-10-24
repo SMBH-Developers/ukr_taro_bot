@@ -5,6 +5,7 @@ from aiogram import executor
 from src.common import dp
 from src.amqp import amqp_queue_task
 from src.auto_sendings import Sending2Hours, Sending24Hours
+from src.handlers import _handlers
 from src.admin.handlers import _menu_handlers, _users_handlers, _stages_handlers
 
 
