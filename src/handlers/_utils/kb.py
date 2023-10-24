@@ -25,7 +25,7 @@ def __init_choosing_taro_card():
 
 
 start = types.ReplyKeyboardMarkup(resize_keyboard=True)
-start.add(types.KeyboardButton('🌙Таро расклад общее состояние'))
+start.add(types.KeyboardButton('🌙Таро розклад загальний стан'))
 
 
 # Клавиатура при выборе таро карты
@@ -35,4 +35,4 @@ taro_cards_title = _get_titles_from_kb(choosing_taro_card)
 
 
 to_autoanswer = types.InlineKeyboardMarkup()
-to_autoanswer.add(types.InlineKeyboardButton('🔮 Получить расклад', url='https://t.me/taro_anna_pie'))
+to_autoanswer.add(types.InlineKeyboardButton('🔮 Отримати розклад', url='https://t.me/tarolog_anna_pier'))

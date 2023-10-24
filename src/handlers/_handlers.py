@@ -18,7 +18,7 @@ async def start(message: types.Message):
     await message.answer(texts.welcome, reply_markup=kb.start)
 
 
-@dp.message_handler(lambda message: message.text == "🌙Таро расклад общее состояние", state='*')
+@dp.message_handler(lambda message: message.text == "🌙Таро розклад загальний стан", state='*')
 async def start_choosing_cards(message: types.Message, state: FSMContext):
     await db.update_stage(message.from_user.id, 'stage_2')
     f = types.InputFile(DATA_DIR / 'taro_cards.jpg')
@@ -27,7 +27,7 @@ async def start_choosing_cards(message: types.Message, state: FSMContext):
 
 @dp.message_handler(lambda message: message.text in kb.taro_cards_title, state='*')
 async def choose_card(message: types.Message, state: FSMContext):
-    await message.answer('🪄Обрабатываю информацию...', reply_markup=types.ReplyKeyboardRemove())
+    await message.answer('🪄Обробляю інформацію...', reply_markup=types.ReplyKeyboardRemove())
     choose = int(message.text.split()[-1]) - 1
     asyncio.create_task(send_late_taro_analyze(message, choose))
 
