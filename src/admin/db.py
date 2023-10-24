@@ -63,3 +63,28 @@ async def get_stages_stat() -> list[list[tuple], list[tuple], list[tuple]]:
                                               )).all()
     ls = [_optimize_stages(stages_stat) for stages_stat in (total_stages, yesterday_stages, today_stages)]
     return ls
+
+
+async def get_stages_excel() -> tuple[Row[datetime, int, int, int, int, int, int]]:
+    query = """
+        WITH dates as (
+        SELECT GENERATE_SERIES(DATE(NOW() - INTERVAL '30 day'), DATE(NOW()), '1 day'::INTERVAL) AS date
+    ), date_users as (
+        SELECT Users.stage, DATE(Users.registration_date) as registration_date FROM Users
+    )
+    SELECT
+    DATE(dates.date) AS date,
+    (SELECT COUNT(*) FROM date_users WHERE DATE(date_users.registration_date) = dates.date) AS all_stages,
+    (SELECT COUNT(*) FROM date_users WHERE DATE(date_users.registration_date) = dates.date AND date_users.stage IS NULL) AS stage_null,
+    (SELECT COUNT(*) FROM date_users WHERE DATE(date_users.registration_date) = dates.date AND date_users.stage = 'stage_1') AS stage_1,
+    (SELECT COUNT(*) FROM date_users WHERE DATE(date_users.registration_date) = dates.date AND date_users.stage = 'stage_2') AS stage_2,
+    (SELECT COUNT(*) FROM date_users WHERE DATE(date_users.registration_date) = dates.date AND date_users.stage = 'stage_3') AS stage_3,
+    (SELECT COUNT(*) FROM date_users WHERE DATE(date_users.registration_date) = dates.date AND date_users.stage = 'stage_4') AS stage_4
+    FROM dates
+    ORDER BY dates.date DESC;
+    """
+    query = text(query)
+    async with async_session() as session:
+        stat = (await session.execute(query)).all()
+
+    return stat
