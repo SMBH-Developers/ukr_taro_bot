@@ -16,10 +16,12 @@ class BaseSending:
     is_active: bool = False
     text: str = None
     kb: types.InlineKeyboardMarkup = None
-    requirements: tuple[ColumnElement] = None
     to_log: str = None
 
     def _update_query_on_success(self, user: int) -> Update:
+        raise NotImplementedError
+
+    def requirements(self) -> tuple[ColumnElement]:
         raise NotImplementedError
 
     async def _try_to_send(self, user: int) -> bool:
@@ -45,7 +47,7 @@ class BaseSending:
         self._verify()
         while True:
             async with async_session() as session:
-                users = (await session.execute(select(User.id).where(*self.requirements))).scalars().all()
+                users = (await session.execute(select(User.id).where(*self.requirements()))).scalars().all()
 
             for user in users:
                 if await self._try_to_send(user):
