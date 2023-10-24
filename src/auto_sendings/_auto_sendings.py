@@ -1,8 +1,8 @@
 from aiogram import types
 from aiogram.utils import markdown
 
-from sqlalchemy import Update
-from sqlalchemy import func
+from sqlalchemy import Update, TIMESTAMP
+from sqlalchemy import func, cast
 from sqlalchemy.sql.expression import select, update
 
 from loguru import logger
@@ -20,7 +20,7 @@ class Sending2Hours(BaseSending):
     text = f"🙌Дорогие мои, я спешу сообщить о том, что осталось всего {markdown.hbold('6 бесплатных мест на расклад карт таро')}\n\n💌Не упустите свой шанс и напишите: «карта судьбы» в личные сообщения — @taro_anna_pie...👈\n\n📝С помощью бесплатного  расклада на таро мы сможем выявить актуальные жизненные проблемы с которыми столкнетесь в этом месяце и найти правильные пути для их решения"
     kb = types.InlineKeyboardMarkup()
     kb.add(types.InlineKeyboardButton("🌟 Изменить жизнь", url='https://t.me/taro_anna_pie '))
-    requirements = (func.trunc(func.date_part('hour', func.now(), User.registration_date)) >= 2,
+    requirements = (func.trunc(func.date_part('hour', cast(func.now(), TIMESTAMP), cast(User.registration_date, TIMESTAMP))) >= 2,
                     User.got_2h_autosending.is_(None), User.stage != 'stage_4')
     to_log: str = '2h_sending'
 
